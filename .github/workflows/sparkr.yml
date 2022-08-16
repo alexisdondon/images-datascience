@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 name: ci-sparkr
 
 on:
@@ -64,3 +65,27 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
+=======
+name: sparkr
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [r]
+    types:
+      - completed
+
+jobs:
+  base:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: sparkr
+      context: spark
+      test: false
+      push: true
+      base_image: inseefrlab/onyxia-r:latest
+      base_image_gpu: inseefrlab/onyxia-r:latest-gpu
+>>>>>>> 0a3b76245e387c14cae7e1950e2ffb733abde599

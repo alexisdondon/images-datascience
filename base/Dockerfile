@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ARG BASE_IMAGE=ubuntu:20.04
 FROM $BASE_IMAGE
 
@@ -69,3 +70,80 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
 USER ${USERNAME}
 
 CMD ["/bin/bash"]
+=======
+ARG BASE_IMAGE
+FROM $BASE_IMAGE
+
+# Set default shell
+SHELL ["/bin/bash", "-c"]
+ENV SHELL="/bin/bash"
+ENV DEBIAN_FRONTEND noninteractive
+
+# Setup user & workspace
+ENV USERNAME="onyxia"
+ENV UID="1000"
+ENV GROUPNAME="users"
+ENV GID="100"
+ENV HOME="/home/${USERNAME}"
+ENV WORKSPACE_DIR="${HOME}/work"
+RUN groupmod -g ${GID} ${GROUPNAME} && \
+    useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
+    passwd -d ${USERNAME} && \
+    mkdir ${WORKSPACE_DIR}
+WORKDIR ${WORKSPACE_DIR}
+
+ARG VAULT_VERSION="1.11.0"
+
+USER root
+
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    ## Install system libraries
+    apt-get install -y --no-install-recommends \
+        bash-completion \
+        build-essential \
+        ca-certificates \
+        curl \
+        git \
+        jq \
+        less \
+        locales \
+        openssh-client \
+        sudo \
+        tini \
+        unzip \
+        wget && \
+    # Set up locales
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen && \
+    ## Install common binaries required for Onyxia
+    # kubectl
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
+    chmod +x ./kubectl && \
+    mv ./kubectl /usr/local/bin/kubectl && \
+    echo 'source <(kubectl completion bash)' >> /home/${USERNAME}/.bashrc && \
+    # helm
+    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
+    chmod +x get_helm.sh && \
+    ./get_helm.sh && \
+    echo 'source <(helm completion bash)' >> /home/${USERNAME}/.bashrc && \
+    # mc
+    wget -q https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
+    chmod +x /usr/local/bin/mc && \
+    # vault
+    wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip -O vault.zip  && \
+    unzip vault.zip -d /usr/local/bin/ && \
+    vault -autocomplete-install && \
+    # Fetch Onyxia init script
+    mkdir /scripts && \
+    wget https://inseefrlab.github.io/onyxia/onyxia-init.sh -O /scripts/onyxia-init.sh && \
+    chmod +x /scripts/onyxia-init.sh && \
+    # Fix permissions
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    # Clean
+    rm get_helm.sh vault.zip && \
+    rm -rf /var/lib/apt/lists/*
+
+USER ${USERNAME}
+
+CMD ["/bin/bash"]
+>>>>>>> 0a3b76245e387c14cae7e1950e2ffb733abde599
