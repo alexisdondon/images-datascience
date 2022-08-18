@@ -14,7 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       base: ${{ steps.filter.outputs.base }}
+      python: ${{ steps.filter.outputs.python }}
+      r: ${{ steps.filter.outputs.r }}
       vscode: ${{ steps.filter.outputs.vscode }}
+      jupyter: ${{ steps.filter.outputs.jupyter }}
+      sparkr: ${{ steps.filter.outputs.sparkr }}
+      pyspark: ${{ steps.filter.outputs.pyspark }}
     steps:
     - uses: actions/checkout@v2
     - uses: dorny/paths-filter@v2
@@ -33,6 +38,8 @@ jobs:
             - 'jupyter/**'
           sparkr:
             - 'sparkr/**'
+          pyspark:
+            - 'pyspark/**'
   echo:
     needs: tests
     runs-on: ubuntu-latest
@@ -53,7 +60,7 @@ jobs:
       base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
   python:
     needs: [base]
-    if: needs.tests.steps.filter.outputs.python == 'true'
+    if: needs.tests.outputs.python == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python
@@ -65,7 +72,7 @@ jobs:
   r:
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
-    if: needs.tests.steps.filter.outputs.r == 'true'
+    if: needs.tests.outputs.r == 'true'
     with:
       image: r
       context: r
@@ -75,7 +82,7 @@ jobs:
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
   jupyter:
     needs: [python]
-    if: needs.tests.steps.filter.outputs.jupyter == 'true'
+    if: needs.tests.outputs.jupyter == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter
@@ -85,7 +92,7 @@ jobs:
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
   vscode:
-    needs: [tests]
+    needs: [python]
     if: needs.tests.outputs.vscode == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
@@ -97,6 +104,7 @@ jobs:
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
   pyspark:
     needs: [python]
+    if: needs.tests.outputs.pyspark == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: pyspark
@@ -117,6 +125,7 @@ jobs:
       base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
   r-studio:
     needs: [r]
+    if: needs.tests.outputs.rstudio == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: rstudio
