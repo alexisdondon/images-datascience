@@ -23,7 +23,7 @@ jobs:
             - 'base/**'
   base:
     uses: ./.github/workflows/main-workflow-template.yml
-    if: steps.filter.outputs.base == 'true'
+    if: tests.steps.filter.outputs.base == 'true'
     with:
       image: base
       context: base
