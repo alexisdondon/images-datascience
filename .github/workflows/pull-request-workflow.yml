@@ -30,6 +30,11 @@ jobs:
             - 'jupyter/**'
           sparkr:
             - 'sparkr/**'
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        run: echo ${{ needs.tests.steps.filter.outputs.vscode }}
             
   base:
     uses: ./.github/workflows/main-workflow-template.yml
