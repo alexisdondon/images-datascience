@@ -8,7 +8,6 @@ on:
 
 env:
   PUSH: false
-  TEST: false
 
 jobs:
   tests:
@@ -23,7 +22,7 @@ jobs:
             - 'base/**'
   base:
     uses: ./.github/workflows/main-workflow-template.yml
-    if: tests.steps.filter.outputs.base == 'true'
+    if: jobs.tests.steps.filter.outputs.base == 'true'
     with:
       image: base
       context: base
