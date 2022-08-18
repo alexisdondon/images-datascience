@@ -110,6 +110,7 @@ jobs:
   jupyter-pyspark:
     needs: [pyspark]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: always() && needs.tests.outputs.jupyter == 'true'
     with:
       image: jupyter-pyspark
       context: jupyter
@@ -119,7 +120,7 @@ jobs:
       base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
   r-studio:
     needs: [r]
-    if: needs.tests.outputs.rstudio == 'true'
+    if: always() &&  needs.tests.outputs.rstudio == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: rstudio
@@ -131,6 +132,7 @@ jobs:
   sparkr:
     needs: [r]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: always() && needs.tests.outputs.spark == 'true'
     with:
       image: sparkr
       context: spark
@@ -141,6 +143,7 @@ jobs:
   rstudio-sparkr:
     needs: [sparkr]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: always() && needs.tests.outputs.rstudio == 'true'
     with:
       image: rstudio-sparkr
       context: rstudio
