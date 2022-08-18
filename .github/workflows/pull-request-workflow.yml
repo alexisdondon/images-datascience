@@ -93,7 +93,7 @@ jobs:
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
   vscode:
     needs: [python]
-    if: needs.tests.outputs.vscode == 'true'
+    if: always() && needs.tests.outputs.vscode == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-python
