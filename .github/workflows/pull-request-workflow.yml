@@ -36,20 +36,14 @@ jobs:
             - 'vscode/**'
           jupyter:
             - 'jupyter/**'
-          sparkr:
+          spark:
             - 'sparkr/**'
-          pyspark:
-            - 'pyspark/**'
-  echo:
-    needs: tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump GitHub context
-        run: echo ${{ toJSON(needs.tests)}}
+          rstudio:
+            - 'rstudio/**'
             
   base:
     uses: ./.github/workflows/main-workflow-template.yml
-    if: needs.tests.outputs.base == 'true'
+    if: always() && needs.tests.outputs.base == 'true'
     needs: tests
     with:
       image: base
@@ -60,7 +54,7 @@ jobs:
       base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
   python:
     needs: [base]
-    if: needs.tests.outputs.python == 'true'
+    if: always() && needs.tests.outputs.python == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python
@@ -72,7 +66,7 @@ jobs:
   r:
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
-    if: needs.tests.outputs.r == 'true'
+    if: always() && needs.tests.outputs.r == 'true'
     with:
       image: r
       context: r
@@ -82,7 +76,7 @@ jobs:
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
   jupyter:
     needs: [python]
-    if: needs.tests.outputs.jupyter == 'true'
+    if: always() && needs.tests.outputs.jupyter == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter
@@ -104,7 +98,7 @@ jobs:
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
   pyspark:
     needs: [python]
-    if: needs.tests.outputs.pyspark == 'true'
+    if: always() && needs.tests.outputs.spark == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: pyspark
