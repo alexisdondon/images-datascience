@@ -12,6 +12,9 @@ env:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    outputs:
+      base: ${{ steps.filter.outputs.base }}
+      vscode: ${{ steps.filter.outputs.vscode }}
     steps:
     - uses: actions/checkout@v2
     - uses: dorny/paths-filter@v2
@@ -39,7 +42,7 @@ jobs:
             
   base:
     uses: ./.github/workflows/main-workflow-template.yml
-    if: needs.tests.steps.filter.outputs.base == 'true'
+    if: needs.tests.outputs.base == 'true'
     needs: tests
     with:
       image: base
@@ -83,7 +86,7 @@ jobs:
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
   vscode:
     needs: [tests]
-    if: needs.tests.steps.filter.outputs.vscode == 'true'
+    if: needs.tests.outputs.vscode == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-python
