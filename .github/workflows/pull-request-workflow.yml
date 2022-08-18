@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context
-        run: echo ${{ toJson(needs.tests)}}
+        run: echo ${{ toJSON(needs.tests)}}
             
   base:
     uses: ./.github/workflows/main-workflow-template.yml
