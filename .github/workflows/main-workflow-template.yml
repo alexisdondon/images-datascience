@@ -95,6 +95,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: classic push
+        if: ${{ inputs.push == 'true' }}
+        run: docker push ${{ steps.meta.outputs.tags }}
     
       - name: Build and push
         if: ${{ inputs.push == 'true' }}
