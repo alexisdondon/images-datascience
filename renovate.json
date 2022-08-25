@@ -39,7 +39,7 @@
       "depNameTemplate": "rocker-org/rocker-versioned2",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^R(?<version>.*)$",
-      "prHeader":"Take care of this"
+      "labels": ["take-with-care"]
     }
   ]
 }
