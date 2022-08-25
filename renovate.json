@@ -38,8 +38,7 @@
       "matchStrings": ["ENV R_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "rocker-org/rocker-versioned2",
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^R(?<version>.*)$",
-      "labels": ["take-with-care"]
+      "extractVersionTemplate": "^R(?<version>.*)$"
     }
   ]
 }
