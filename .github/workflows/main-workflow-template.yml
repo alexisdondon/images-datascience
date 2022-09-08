@@ -65,7 +65,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
     - name: Check out code 
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - id: set-matrix
       run: |
         base_image_escaped=$(echo ${{inputs.base_image}} | sed 's/\//\\\//g' )
