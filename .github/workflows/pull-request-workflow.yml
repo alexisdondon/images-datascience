@@ -62,6 +62,7 @@ jobs:
       image: base
       context: base
       test: true
+<<<<<<< HEAD
       base_image: ubuntu:20.04
       base_image_gpu: nvidia/cuda:11.7.1-cudnn8-devel-ubuntu20.04
       external_base_image: true
@@ -69,6 +70,14 @@ jobs:
   python-minimal:
     needs: changes
     if: ${{ needs.changes.outputs.python-minimal == 'true' }}
+=======
+      push: $env.PUSH
+      base_image: ubuntu:22.04
+      base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu22.04
+  python:
+    needs: [base]
+    if: always() && needs.tests.outputs.python == 'true'
+>>>>>>> upstream/upgrades
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-minimal

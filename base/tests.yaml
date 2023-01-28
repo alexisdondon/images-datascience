@@ -36,3 +36,19 @@ commandTests:
     command: "which"
     args: ["argo"]
     expectedOutput: ["/usr/local/bin/argo"]
+<<<<<<< HEAD
+=======
+fileExistenceTests:
+  - name: "user home"
+    path: "/home/onyxia"
+    shouldExist: true
+    permissions: "drwxr-x---"
+    uid: 1000
+    gid: 100
+  - name: "onyxia init script"
+    path: "/opt/onyxia-init.sh"
+    shouldExist: true
+    permissions: "-rwxrwxr--"
+    uid: 0
+    gid: 0
+>>>>>>> upstream/upgrades
